@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Image from '../resources/banner.jpg';
 import MovieRating from './movieRating';
+import { Link } from "react-router-dom";
 
 class ItemCard extends Component {
     state = {};
@@ -24,9 +25,11 @@ class ItemCard extends Component {
                     </div>
                     <h5 class="card-title" style={{color: "#ffe95a"}}>Spider-Man - No Way Home</h5>
                     <p class="card-text" style={{color: "#ffe95a"}}>When the entire world finds out the identity of Spider-Man, Peter Parker decides to ask Doctor Strange for help.</p>
-                    <a href="#" class="btn btn-primary" style={{color: "#fffb8c",
-                                                                backgroundColor: "orange",
-                                                                borderColor: "orange"}}>Read more...</a>
+                    <Link className="btn btn-primary btn-lg" to="/details" role="button" style={{color: "#fffb8c",
+                                                                                          backgroundColor: "orange",
+                                                                                          borderColor: "orange"}}>
+                        Read more...
+                    </Link>
         </div>
     }
 }
