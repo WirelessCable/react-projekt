@@ -9,7 +9,7 @@ class SearchBar extends Component {
                             flexWrap: "nowrap"}}>
             <form>
                 <input style={{padding: 14,
-                                width: 700,
+                                width: 500,
                                 borderColor: "#ffe95a",
                                 borderRadius: 12,
                                 backgroundColor: "#ffb638",

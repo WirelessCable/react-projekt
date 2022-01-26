@@ -1,8 +1,71 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
+const axios = require('axios');
 
 class AddMovie extends Component {
-    state = {};
+   state = {
+       movie: {
+           title: "",
+           image: "",
+           content: ""
+       },
+       errors: {}
+   };
+
+   handleChangeRoute = () => {
+       this.props.history.push('/');
+   };
+
+   validate = () => {
+       const errors = {};
+
+       const {movie} = this.state;
+       if (movie.title.trim() === '') {
+           errors.title = 'Title is required!';
+       }
+       if (movie.image.trim() === '') {
+           errors.image = 'Image URL is required!';
+       }
+       if (movie.content.trim() === '') {
+           errors.content = 'Description is required!';
+       }
+
+       return Object.keys(errors).length === 0 ? null : errors;
+   };
+
+   handleSubmit = (event) => {
+       event.preventDefault();
+
+       const errors = this.validate();
+       this.setState({errors: errors || {}});
+       if (errors) return;
+
+       console.log(this.state)
+
+       axios({
+           method: 'post',
+           url: 'https://pr-movies.herokuapp.com/api/movies',
+           data: {
+               title: this.state.movie.title,
+               image: this.state.movie.image,
+               content: this.state.movie.content
+           }
+       }).then((response) => {
+           this.handleChangeRoute();
+       }).catch((error) => {
+           const errors = {};
+           errors.image = 'Invalid data!';
+           this.setState({errors: errors || {}});
+           console.log(error);
+       });
+   };
+
+   handleChange = (event) => {
+       const movie = {...this.state.movie};
+       movie[event.currentTarget.name] = event.currentTarget.value;
+       this.setState({movie});
+   };
+
 
     render(){
         return <div style={{display: "flex",
@@ -31,18 +94,48 @@ class AddMovie extends Component {
                             rowGap: 50,
                             }}>
 
-                <h1 style={{color: "white"}}>
-                    /add
-                </h1>
-                <h5 style={{color: "white"}}>
-                    Page has not been created yet.
-                </h5>
-
-                <Link className="btn btn-primary btn-lg" to="/" role="button" style={{color: "white",
-                                                                                      backgroundColor: "orange",
-                                                                                      borderStyle: "none"}}>
-                    Back to main page
-                </Link>
+               <form onSubmit={this.handleSubmit} style={{width: "30%"}}>
+                   <div className="form-group">
+                       <label htmlFor="username" style={{color: "white"}} class="form-label">Tytuł</label>
+                       <input value={this.state.movie.title}
+                              name="title"
+                              onChange={this.handleChange}
+                              type="text"
+                              className="form-control"
+                              id="title"
+                              aria-describedby="emailHelp"
+                              placeholder="Tytuł"/>
+                       {this.state.errors.title &&
+                       <div className="alert alert-danger">{this.state.errors.title}</div>}
+                   </div>
+                   <div className="form-group">
+                       <label htmlFor="password" style={{color: "white"}} class="form-label">URL obrazu</label>
+                       <input value={this.state.movie.image}
+                              name="image"
+                              onChange={this.handleChange}
+                              type="text"
+                              className="form-control"
+                              id="image"
+                              placeholder="URL obrazu"/>
+                       {this.state.errors.image &&
+                       <div className="alert alert-danger">{this.state.errors.image}</div>}
+                   </div>
+                   <div className="form-group">
+                       <label htmlFor="email" style={{color: "white"}} class="form-label">Opis</label>
+                       <textarea value={this.state.movie.content}
+                              name="content"
+                              onChange={this.handleChange}
+                              type="text"
+                              className="form-control"
+                              id="content"
+                              aria-describedby="emailHelp"
+                              placeholder="Opis"
+                              rows="10"/>
+                       {this.state.errors.content &&
+                       <div className="alert alert-danger">{this.state.errors.content}</div>}
+                   </div>
+                   <button type="submit" class="btn btn-primary" style={{backgroundColor: "orange", borderStyle: "none", width: "100%", marginTop: 32}}>Add movie!</button>
+               </form>
 
             </div>
         </div>
